@@ -6,14 +6,12 @@ Acá en el README se va a explicar como implementar el login con Google usando F
 
 Paso 1: Creando el proyecto en Firebase
 
-. Ingresá a firebase.google.com e iniciá sesión con tu cuenta de Google
-. . Hacé clic en "Agregar proyecto"
-. . . Poné un nombre, desactivá Google Analytics si no lo necesitás, y creá el proyecto
-. . . . Una vez adentro, hacé clic en el ícono </> (Web) para registrar tu app
-. . . . . Poné un nombre para la app y hacé clic en "Registrar app"
-. . . . . . Firebase te va a mostrar un bloque de código con tu firebaseConfig. Copialo, lo vas a necesitar después
-
-
+- Ingresá a firebase.google.com e iniciá sesión con tu cuenta de Google
+- Hacé clic en "Agregar proyecto"
+- Poné un nombre, desactivá Google Analytics si no lo necesitás, y creá el proyecto
+- Una vez adentro, hacé clic en el ícono </> (Web) para registrar tu app
+- Poné un nombre para la app y hacé clic en "Registrar app"
+- Firebase te va a mostrar un bloque de código con tu firebaseConfig. Copialo, lo vas a necesitar después
 
 Paso 2 — Activar el login con Google
 
