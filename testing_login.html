@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg:        #0f1117;
+            --surface:   #1a1d27;
+            --border:    #2a2d3a;
+            --accent:    #6c63ff;
+            --accent-h:  #5a52e0;
+            --text:      #e8e8f0;
+            --muted:     #8888a8;
+            --google-bg: #ffffff;
+            --google-h:  #f0f0f0;
+            --radius:    16px;
+            --shadow:    0 24px 60px rgba(0,0,0,0.5);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        /* Ambient glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            padding: 44px 40px;
+            text-align: center;
+        }
+
+        /* Logo mark */
+        .logo {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            border-radius: 14px;
+            margin: 0 auto 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo svg {
+            width: 26px;
+            height: 26px;
+            fill: white;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.3px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 36px;
+            line-height: 1.5;
+        }
+
+        /* Google button */
+        #btn-login {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--google-bg);
+            color: #3c3c3c;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 20px;
+            cursor: pointer;
+            transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        }
+        #btn-login:hover {
+            background: var(--google-h);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+            transform: translateY(-1px);
+        }
+        #btn-login:active { transform: translateY(0); }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 28px 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Privacy note */
+        .note {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* ─── Logged-in state ─── */
+        #vista-usuario {
+            display: none;
+            text-align: center;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 80px;
+            margin: 0 auto 20px;
+        }
+        #foto {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            display: block;
+        }
+        .online-dot {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 14px;
+            height: 14px;
+            background: #4ade80;
+            border: 2px solid var(--surface);
+            border-radius: 50%;
+        }
+
+        #nombre {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        #correo {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 32px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(108,99,255,0.15);
+            color: #a78bfa;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(108,99,255,0.25);
+            margin-bottom: 32px;
+        }
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background: #a78bfa;
+            border-radius: 50%;
+        }
+
+        #btn-logout {
+            width: 100%;
+            background: transparent;
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+        }
+        #btn-logout:hover {
+            color: #f87171;
+            border-color: rgba(248,113,113,0.4);
+            background: rgba(248,113,113,0.06);
+        }
+
+        /* Spinner for loading state */
+        #vista-cargando {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 0;
+        }
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #vista-cargando p { font-size: 14px; color: var(--muted); }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1e2130;
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 13px;
+            padding: 10px 20px;
+            border-radius: 999px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            white-space: nowrap;
+            z-index: 999;
+        }
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card" id="card">
+
+        <!-- ── Loading ── -->
+        <div id="vista-cargando">
+            <div class="spinner"></div>
+            <p>Verificando sesión…</p>
+        </div>
+
+        <!-- ── Login ── -->
+        <div id="vista-login" style="display:none;">
+            <div class="logo">
+                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 3a3 3 0 1 1-3 3 3 3 0 0 1 3-3Zm0 14.2a7.2 7.2 0 0 1-6-3.22c.03-2 4-3.08 6-3.08s5.97 1.08 6 3.08a7.2 7.2 0 0 1-6 3.22Z"/></svg>
+            </div>
+            <h1>Bienvenido</h1>
+            <p class="subtitle">Ingresá con tu cuenta de Google para continuar.</p>
+
+            <button id="btn-login">
+                <!-- Google SVG logo -->
+                <svg class="google-icon" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.14 0 5.95 1.08 8.17 2.85l6.1-6.1C34.46 3.05 29.52 1 24 1 14.82 1 7.07 6.48 3.73 14.22l7.1 5.52C12.52 13.4 17.82 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.5 24.5c0-1.64-.15-3.22-.42-4.74H24v9h12.67c-.55 2.96-2.2 5.47-4.68 7.15l7.14 5.55C43.28 37.6 46.5 31.48 46.5 24.5z"/>
+                    <path fill="#FBBC05" d="M10.83 28.26A14.57 14.57 0 0 1 9.5 24c0-1.48.25-2.91.7-4.26l-7.1-5.52A23.93 23.93 0 0 0 .5 24c0 3.87.93 7.53 2.57 10.77l7.76-6.51z"/>
+                    <path fill="#34A853" d="M24 47c5.52 0 10.16-1.83 13.55-4.95l-7.14-5.55C28.55 37.9 26.38 38.5 24 38.5c-6.18 0-11.42-3.9-13.17-9.24l-7.76 6.51C6.41 43.09 14.52 47 24 47z"/>
+                </svg>
+                Continuar con Google
+            </button>
+
+            <div class="divider">acceso seguro</div>
+            <p class="note">Al ingresar aceptás los términos de uso. No almacenamos contraseñas.</p>
+        </div>
+
+        <!-- ── Logged-in ── -->
+        <div id="vista-usuario">
+            <div class="avatar-wrap">
+                <img id="foto" src="" alt="Foto de perfil">
+                <div class="online-dot"></div>
+            </div>
+            <h2 id="nombre"></h2>
+            <p id="correo"></p>
+            <div class="badge"><span class="badge-dot"></span> Sesión activa</div>
+            <button id="btn-logout">Cerrar sesión</button>
+        </div>
+
+    </div>
+
+    <div id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
+            from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1lzzB5mxam0oXmNUzNya5rr4N9NnKY1s",
+            authDomain: "testeo-de-login-e1cdf.firebaseapp.com",
+            projectId: "testeo-de-login-e1cdf",
+            storageBucket: "testeo-de-login-e1cdf.firebasestorage.app",
+            messagingSenderId: "586465845747",
+            appId: "1:586465845747:web:7bea4d49efd54c6afff286",
+            measurementId: "G-44QGTJHF64"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // ── Toast helper ──
+        function toast(msg, duration = 3000) {
+            const t = document.getElementById("toast");
+            t.textContent = msg;
+            t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), duration);
+        }
+
+        // ── Views ──
+        function show(viewId) {
+            ["vista-cargando", "vista-login", "vista-usuario"].forEach(id => {
+                document.getElementById(id).style.display = id === viewId ? "block" : "none";
+            });
+        }
+
+        // ── Login ──
+        document.getElementById("btn-login").addEventListener("click", () => {
+            signInWithPopup(auth, provider)
+                .then(() => toast("¡Bienvenido! 👋"))
+                .catch(err => {
+                    console.error(err);
+                    toast("No se pudo iniciar sesión. Intentá de nuevo.");
+                });
+        });
+
+        // ── Logout ──
+        document.getElementById("btn-logout").addEventListener("click", () => {
+            signOut(auth)
+                .then(() => toast("Sesión cerrada correctamente."))
+                .catch(() => toast("Error al cerrar sesión."));
+        });
+
+        // ── Auth state ──
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById("nombre").textContent = user.displayName;
+                document.getElementById("correo").textContent = user.email;
+                document.getElementById("foto").src = user.photoURL;
+                show("vista-usuario");
+            } else {
+                show("vista-login");
+            }
+        });
+    </script>
+</body>
+
+</html>
